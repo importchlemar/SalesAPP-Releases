@@ -1,0 +1,60 @@
+name: Notify SalesAPP update
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+
+      - name: Send FCM update notification
+        shell: bash
+        env:
+          PROJECT_ID: salesapp-a68fa
+          TAG: ${{ github.event.release.tag_name }}
+          NOTES: ${{ github.event.release.body }}
+          REPO: ${{ github.repository }}
+
+        run: |
+          set -euo pipefail
+
+          TOKEN="$(gcloud auth print-access-token)"
+
+          python3 - <<'PY' > /tmp/fcm.json
+          import json, os
+
+          tag = os.environ['TAG']
+          version = tag.removeprefix('v')
+
+          body = {
+              "message": {
+                  "topic": "salesapp_app_updates",
+                  "data": {
+                      "type": "APP_UPDATE",
+                      "version": version,
+                      "url": f"https://github.com/{os.environ['REPO']}/releases/download/{tag}/SalesAPP.apk",
+                      "notes": os.environ.get('NOTES','')[:3000],
+                      "title": "Dostępna nowa wersja SalesAPP",
+                      "body": f"Wersja {version} — dotknij, aby zaktualizować."
+                  },
+                  "android": {
+                      "priority": "high"
+                  }
+              }
+          }
+
+          print(json.dumps(body, ensure_ascii=False))
+          PY
+
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Content-Type: application/json; UTF-8" \
+            "https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send" \
+            --data-binary @/tmp/fcm.json
