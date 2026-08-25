@@ -1,0 +1,21 @@
+JEDNORAZOWA KONFIGURACJA REPO SalesAPP-Releases
+
+1. Do repozytorium importchlemar/SalesAPP-Releases skopiuj:
+   .github/workflows/notify-salesapp-update.yml
+
+2. GitHub -> SalesAPP-Releases -> Settings -> Secrets and variables -> Actions.
+   Dodaj Repository secret:
+   FIREBASE_SERVICE_ACCOUNT
+
+3. Wartością sekretu ma być CAŁA zawartość JSON konta serwisowego Firebase/Google Cloud
+   dla projektu salesapp-a68fa. Konto musi mieć uprawnienie do wysyłania FCM.
+
+4. Od następnego opublikowanego GitHub Release workflow automatycznie wyśle FCM
+   na topic salesapp_app_updates.
+
+5. Plik APK w release musi nazywać się dokładnie SalesAPP.apk.
+
+UWAGA:
+- telefon musi przynajmniej raz uruchomić SalesAPP z tą poprawką, aby zapisać się do topicu;
+- zwykłe zamknięcie aplikacji / usunięcie z ostatnich aplikacji nie blokuje FCM;
+- systemowe „Wymuś zatrzymanie” może blokować odbiór do czasu kolejnego uruchomienia.

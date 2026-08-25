@@ -160,6 +160,15 @@ class MainActivity : AppCompatActivity() {
         requestNotificationPermission()
         applyComplaintNotificationIntent(intent)
         GitHubUpdater.handleUpdateIntent(this, intent)
+
+        // Globalny topic TYLKO dla nowych wersji aplikacji.
+        // Nie służy do reklamacji ani powiadomień przedstawicieli.
+        FirebaseMessaging.getInstance()
+            .subscribeToTopic(UpdateConfig.APP_UPDATE_TOPIC)
+            .addOnFailureListener {
+                android.util.Log.w("FCM_UPDATE_TOPIC", "Nie udało się zapisać topicu aktualizacji", it)
+            }
+
         loadConfigAndStart()
         GitHubUpdater.checkForUpdate(this, silent = true)
     }

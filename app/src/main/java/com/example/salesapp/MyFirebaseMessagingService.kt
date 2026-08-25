@@ -81,6 +81,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(message)
 
         val type = message.data["type"].orEmpty()
+
+        if (type == "APP_UPDATE") {
+            GitHubUpdater.handleRemoteUpdate(this, message.data)
+            return
+        }
+
         val isComplaint = type == "COMPLAINT_UPDATE" || type == "COMPLAINT_DELETED"
 
         if (!isComplaint) {

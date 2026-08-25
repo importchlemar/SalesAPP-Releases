@@ -5,6 +5,7 @@ object UpdateConfig {
     const val GITHUB_REPO = "SalesAPP-Releases"
     const val APK_ASSET_NAME = "SalesAPP.apk"
     const val UPDATE_CHANNEL_ID = "salesapp_app_updates"
+    const val APP_UPDATE_TOPIC = "salesapp_app_updates"
 
     // Aktualna pula produktów konkursowych.
     // Nie przechowujemy pełnego katalogu w Firebase.

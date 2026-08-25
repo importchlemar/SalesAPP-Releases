@@ -7,6 +7,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -31,6 +32,20 @@ object GitHubUpdater {
     private const val LAST_AT = "last_notified_at"
     private const val NOTIFICATION_ID = 1330
     private const val REMIND_MS = 6L * 60L * 60L * 1000L
+
+    fun handleRemoteUpdate(context: Context, data: Map<String, String>) {
+        val latest = data["version"].orEmpty().removePrefix("v").trim()
+        val url = data["url"].orEmpty().trim()
+        val notes = data["notes"].orEmpty().trim()
+        if (latest.isBlank() || url.isBlank()) return
+
+        val current = BuildConfig.VERSION_NAME
+        if (compareVersions(latest, current) <= 0) {
+            android.util.Log.d("APP_UPDATE_FCM", "Pomijam wersję $latest; zainstalowana $current")
+            return
+        }
+        notifyUpdate(context, latest, url, notes, force = true)
+    }
 
     fun checkForUpdate(activity: Activity, silent: Boolean = false) {
         thread {
@@ -125,20 +140,20 @@ object GitHubUpdater {
             .show()
     }
 
-    private fun canNotify(activity: Activity): Boolean =
+    private fun canNotify(context: Context): Boolean =
         Build.VERSION.SDK_INT < 33 ||
-            ContextCompat.checkSelfPermission(activity, Manifest.permission.POST_NOTIFICATIONS) ==
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
 
-    private fun notifyUpdate(activity: Activity, latest: String, url: String, notes: String) {
-        if (!canNotify(activity)) return
+    private fun notifyUpdate(context: Context, latest: String, url: String, notes: String, force: Boolean = false) {
+        if (!canNotify(context)) return
 
-        val prefs = activity.getSharedPreferences(PREFS, Activity.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val now = System.currentTimeMillis()
-        if (prefs.getString(LAST_VERSION, "") == latest &&
+        if (!force && prefs.getString(LAST_VERSION, "") == latest &&
             now - prefs.getLong(LAST_AT, 0L) < REMIND_MS) return
 
-        val manager = activity.getSystemService(NotificationManager::class.java)
+        val manager = context.getSystemService(NotificationManager::class.java)
         if (Build.VERSION.SDK_INT >= 26) {
             manager.createNotificationChannel(
                 NotificationChannel(
@@ -151,20 +166,20 @@ object GitHubUpdater {
             )
         }
 
-        val open = Intent(activity, MainActivity::class.java).apply {
+        val open = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             putExtra(EXTRA_URL, url)
             putExtra(EXTRA_VERSION, latest)
             putExtra(EXTRA_NOTES, notes.take(1800))
         }
         val pending = PendingIntent.getActivity(
-            activity, NOTIFICATION_ID, open,
+            context, NOTIFICATION_ID, open,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         manager.notify(
             NOTIFICATION_ID,
-            NotificationCompat.Builder(activity, UpdateConfig.UPDATE_CHANNEL_ID)
+            NotificationCompat.Builder(context, UpdateConfig.UPDATE_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Dostępna nowa wersja SalesAPP")
                 .setContentText("Wersja $latest — dotknij, aby zaktualizować.")
