@@ -131,12 +131,26 @@ class FirebaseSalesRepository(private val db: FirebaseFirestore = FirebaseFirest
         val products = JSONArray()
         (active?.get("products") as? List<*>)?.forEach { raw ->
             val item = raw as? Map<*, *> ?: return@forEach
-            products.put(JSONObject().put("kod", item["code"] ?: "").put("nazwa", item["displayName"] ?: "")
-                .put("ean", item["ean"] ?: "").put("target", item["target"] ?: 0)
+            val code = item["code"]?.toString().orEmpty()
+            val productName = item["displayName"]?.toString()?.trim().orEmpty()
+                .ifBlank { item["name"]?.toString()?.trim().orEmpty() }
+                .ifBlank { code }
+
+            products.put(JSONObject().put("kod", code).put("nazwa", productName)
+                .put("ean", item["ean"] ?: "").put("target", item["target"] ?: item["minimum"] ?: 0)
                 .put("unit", item["unit"] ?: "szt.")
                 .put("zdjecie", item["imageUrl"] ?: item["photo"] ?: item["zdjecie"] ?: ""))
         }
         root.put("konkursTowary", products)
+        root.put(
+            "contestProductsDebug",
+            JSONObject()
+                .put("contestId", active?.get("_id")?.toString().orEmpty())
+                .put("expectedCount", active?.get("productsCount") ?: 0)
+                .put("loadedCount", products.length())
+                .put("loading", active?.get("productsLoading") ?: false)
+                .put("sheet", active?.get("googleSheetTab") ?: UpdateConfig.CONTEST_PRODUCTS_SHEET)
+        )
 
         val clientArray = JSONArray()
         clients.forEach { row ->
@@ -196,14 +210,19 @@ class FirebaseSalesRepository(private val db: FirebaseFirestore = FirebaseFirest
     }
 
     private fun productDownloadSignature(contest: Map<String, Any?>): String {
+        val sheetUrl = contest["googleSheetUrl"]?.toString()?.trim().orEmpty()
+            .ifBlank { UpdateConfig.CONTEST_PRODUCTS_SHEET_URL }
+        val sheetTab = contest["googleSheetTab"]?.toString()?.trim().orEmpty()
+            .ifBlank { UpdateConfig.CONTEST_PRODUCTS_SHEET }
+
         return listOf(
             contest["productsSyncedAtIso"],
             contest["googleSheetExportedAtIso"],
             contest["productRevision"],
             contest["googleSheetProductRevision"],
             contest["productsCount"],
-            contest["googleSheetUrl"],
-            contest["googleSheetTab"],
+            sheetUrl,
+            sheetTab,
         ).joinToString("|") { it?.toString().orEmpty() }
     }
 
@@ -220,7 +239,8 @@ class FirebaseSalesRepository(private val db: FirebaseFirestore = FirebaseFirest
             val tab = contest["googleSheetTab"]?.toString()?.trim().orEmpty()
                 .ifBlank { UpdateConfig.CONTEST_PRODUCTS_SHEET }
 
-            val signature = productDownloadSignature(contest) + "|" + sheetUrl + "|" + tab
+            // 1.36.1: ten sam podpis jest używany przy zapisie i odczycie cache.
+            val signature = productDownloadSignature(contest)
 
             if (
                 contestId.isBlank() ||
