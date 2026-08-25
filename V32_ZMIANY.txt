@@ -1,0 +1,23 @@
+SalesAPP v1.32
+================
+1. TRENDY MIESIĄCA
+- M/M: wybrany miesiąc vs poprzedni miesiąc,
+- R/R: wybrany miesiąc vs ten sam miesiąc poprzedniego roku,
+- układ pionowy, żeby zachować czytelność na telefonie,
+- sprzedaż bieżącego niezamkniętego miesiąca porównywana na podstawie prognozy miesiąca,
+- import i marże jako zmiana w punktach procentowych.
+
+2. REKLAMACJE -> MOJE
+- wyszukiwarka,
+- wyszukiwanie po nr reklamacji, kontrahencie, kodzie/NIP, produkcie, dokumencie, statusie i treści,
+- każda karta pokazuje kontrahenta, kod i NIP.
+
+3. KONKURSY
+- premia jako zdobyta / maksymalna,
+- 0 / MAX na czerwono, gdy brak osiągniętego warunku,
+- zdobyta premia / MAX na zielono po osiągnięciu progu,
+- wielopoziomowe progi wartości są pokazane z informacją, które zostały osiągnięte.
+
+4. GITHUB
+- test nadal: SalesAPP-TEST-Releases,
+- produkcja docelowo: SalesAPP-Releases / SalesAPP.apk.

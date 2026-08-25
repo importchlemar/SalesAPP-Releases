@@ -1,0 +1,6 @@
+SalesAPP v16
+============
+
+Dedykowane powiadomienie COMPLAINT_DELETED.
+Po usunięciu reklamacji przez biuro telefon dostaje push.
+Kliknięcie otwiera listę reklamacji, a nie usunięty rekord.

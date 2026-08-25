@@ -1,0 +1,20 @@
+{
+  "email": "handlowiec@chle-mar.pl",
+  "name": "Imię Nazwisko",
+  "role": "HANDLOWIEC",
+  "representativeCode": "PRZED1",
+  "clientScope": "SWOI",
+  "active": true,
+  "permissions": {
+    "complaints.read": true,
+    "complaints.create": true,
+    "tabs.summary": true,
+    "tabs.owners": true,
+    "tabs.contest": true,
+    "tabs.market": true,
+    "tabs.clients": true,
+    "tabs.complaints": true,
+    "complaints.edit": true,
+    "complaints.delete": true
+  }
+}

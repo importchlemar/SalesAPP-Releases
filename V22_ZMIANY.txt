@@ -1,0 +1,11 @@
+SalesAPP v22
+============
+
+Dokument dla produktu jest szukany kolejno:
+1. customer_product_keys
+2. product_ids
+3. product_codes
+4. do 1000 dokumentów klienta
+
+Klient jest dopasowywany po ID, kodzie lub NIP.
+Obsługiwane dokumenty po synchronizacji Windows: FA / FS / PA.

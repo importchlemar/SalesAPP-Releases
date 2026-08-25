@@ -1,0 +1,4 @@
+OK: BuildConfig removed from payloads
+OK: buildConfig explicitly enabled
+OK: diagnostic log
+OK: compile test script

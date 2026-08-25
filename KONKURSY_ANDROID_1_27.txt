@@ -1,0 +1,25 @@
+SalesAPP Android 1.27 — ZADANIA PRODUKTOWE I PREMIE
+
+Projekt otwórz w Android Studio albo uruchom plik ZBUDUJ_APK.bat.
+Gotowy plik APK po kompilacji pojawi się w:
+app\build\outputs\apk\debug\app-debug.apk
+
+Zadanie produktowe pokazuje przy każdym przedstawicielu:
+• nazwę i kod produktu,
+• wykonanie / wymaganą ilość, np. DPR200: 12 / 20 szt.,
+• pasek postępu oraz oznaczenie zaliczonych produktów,
+• liczbę spełnionych pozycji, np. 3 / 4,
+• przyznaną premię po spełnieniu wszystkich warunków.
+
+Przy zadaniu produktowym NIE jest pokazywana ogólna wartość sprzedaży ani marża.
+Konkursy rankingowe nadal pokazują sprzedaż i odpowiednie wskaźniki.
+
+Jeden konkurs może zawierać do 50 000 produktów. Produkty NIE są zapisywane
+w Firebase. Windows tworzy Excel ze zdjęciami oraz folder miniaturek, a Android
+pobiera listę z wybranego Arkusza Google tylko po zmianie jej wersji.
+
+Żeby Android mógł pobrać listę, udostępnij Arkusz Google ustawieniem:
+„Każda osoba mająca link — Wyświetlający”. Konkurs całej sprzedaży nie wymaga
+listy produktów ani arkusza.
+
+Zbuduj i zainstaluj aplikację Android 1.27. Modułu Windows nie trzeba aktualizować.

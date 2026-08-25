@@ -1,0 +1,20 @@
+SalesAPP Android PRODUKCJA v1.33 — JAVA FIX
+
+Dodano automatyczne wykrywanie JAVA_HOME.
+
+Skrypty szukają kolejno:
+1. już ustawionego JAVA_HOME,
+2. C:\Program Files\Android\Android Studio\jbr
+3. C:\Program Files\Android\Android Studio\jre
+4. C:\Program Files\Java\jdk-*
+5. C:\Program Files\Eclipse Adoptium\jdk-*
+6. C:\Program Files\Microsoft\jdk-*
+
+Najpierw można uruchomić:
+0_SPRAWDZ_JAVA.bat
+
+Jeżeli pokaże JAVA DZIALA POPRAWNIE:
+1_PRZYGOTUJ_STALY_PODPIS.bat
+2_ZBUDUJ_PRODUKCYJNY_APK.bat
+
+Nie trzeba ręcznie ustawiać systemowego JAVA_HOME.

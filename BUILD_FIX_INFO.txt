@@ -1,0 +1,17 @@
+SalesAPP 1.34.0 — BUILD FIX
+
+Poprawiono zgodność z AGP/Kotlin:
+- appVersion nie zależy od wygenerowanego BuildConfig,
+- BuildConfig jawnie włączony,
+- uproszczone pobieranie versionName,
+- skrypt budowania zapisuje BUILD_RELEASE.log,
+- przy błędzie pokazuje konkretne komunikaty Kotlin.
+
+Najpierw:
+2A_TYLKO_TEST_KOMPILACJI.bat
+
+Jeżeli pokaże KOMPILACJA KOTLIN OK:
+2_ZBUDUJ_PRODUKCYJNY_APK.bat
+
+Jeżeli nadal wystąpi błąd:
+podeślij BUILD_KOTLIN_TEST.log albo screen z wyświetlonymi liniami błędu.

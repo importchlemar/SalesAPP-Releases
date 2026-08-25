@@ -1,0 +1,4 @@
+SalesAPP v13 FIX1
+Poprawiono błąd kompilacji Kotlin w MainActivity.kt:
+- autofillHints = arrayOf(...) -> setAutofillHints(...)
+Dotyczy pól E-mail oraz Hasło na ekranie Firebase Login.

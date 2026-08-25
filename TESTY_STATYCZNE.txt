@@ -1,0 +1,16 @@
+TESTY STATYCZNE SalesAPP TEST v1.29
+===================================
+2026-08-24
+
+OK - AndroidManifest.xml poprawny XML.
+OK - file_paths.xml poprawny XML.
+OK - MainActivity.kt: liczba nawiasów {} i () zgodna po patchu.
+OK - GitHubUpdater.kt: liczba nawiasów {} i () zgodna.
+OK - wersja: versionCode 29 / 1.29-konkursy-server-github.
+OK - applicationId pozostaje com.example.salesapp.test.
+OK - GitHub: importchlemar/SalesAPP-TEST-Releases / SalesAPP-TEST.apk.
+OK - REQUEST_INSTALL_PACKAGES + FileProvider są skonfigurowane.
+OK - Konkurs obsługuje QUANTITY / VALUE / RANKING.
+OK - deep-link FCM obsługuje konkurs i reklamacje.
+
+Pełny assembleDebug musi być wykonany na komputerze z Android SDK (ZBUDUJ_APK.bat).

@@ -1,0 +1,20 @@
+SalesAPP TEST v1.29
+==================
+- nowy widok KONKURS: ilości / wartość netto / ranking
+- progress: ile/ile + dokładnie ile brakuje
+- kilka konkursów naraz
+- ADMIN/BIURO może przełączać przedstawiciela
+- pełna pula produktów nadal pobierana z Google Sheet
+- poprawny deep-link z FCM do Konkurs/Reklamacje
+- automatyczne sprawdzanie GitHub Releases
+- bezpośrednie pobranie SalesAPP-TEST.apk i uruchomienie instalatora Android
+- po jednorazowej zgodzie „instaluj nieznane aplikacje” instalacja jest wznawiana po powrocie
+- applicationId nadal com.example.salesapp.test — nie nadpisuje obecnej produkcji podczas testów
+
+WAŻNE DLA AKTUALIZACJI APK
+--------------------------
+Android zaakceptuje aktualizację tylko wtedy, gdy kolejny APK ma ten sam applicationId
+oraz jest podpisany tym samym kluczem. W obecnej aplikacji TEST używany jest podpis builda
+Android Studio/Gradle. Najbezpieczniej na czas testów publikować kolejne APK z tego samego
+komputera, na którym zbudowano zainstalowaną wersję TEST. Przed przejściem na produkcję
+ustalimy stały release keystore i nie będziemy go zmieniać.

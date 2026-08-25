@@ -1,0 +1,18 @@
+SalesAPP v20 — CZYSTA PACZKA
+===========================
+
+LOGOWANIE:
+- Firebase Authentication
+- e-mail + hasło
+- profil użytkownika z salesapp_users/{uid}
+- brak starego logowania PIN
+
+ZACHOWANE POPRAWKI:
+- powiadomienia reklamacji tylko właściciela po UID,
+- synchronizacja Towar dostarczony Windows <-> SalesAPP,
+- poprawione Firestore Rules dla warehouse.received / warehouseReceived,
+- obsługa usunięcia reklamacji,
+- token FCM przypisany do aktualnego UID.
+
+W ekranie logowania widoczny jest napis: Firebase • SalesAPP v20.
+Jeżeli po instalacji go nie widzisz, uruchomiony jest stary APK/projekt.

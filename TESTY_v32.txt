@@ -1,0 +1,11 @@
+Kontrole v1.32
+===============
+OK: Trendy M/M + R/R
+OK: Reklamacje/MOJE — wyszukiwarka + kontrahent
+OK: Konkurs — premia zdobyta / maksymalna, kolor czerwony/zielony
+OK: obsługa wielu progów valueTiers
+OK: statyczny bilans nawiasów Kotlin
+
+Pełny compile Gradle nie był możliwy w środowisku przygotowania paczki,
+bo Gradle Wrapper próbował pobrać dystrybucję z services.gradle.org,
+a środowisko nie ma dostępu do Internetu. Właściwy build wykonuje ZBUDUJ_APK.bat na Windows.

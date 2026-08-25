@@ -1,0 +1,10 @@
+SalesAPP v15 — historia zmian reklamacji + mail worker
+
+- CREATED / UPDATED / DELETED trafiają do complaint_events.
+- UPDATED zawiera before / after / changes.
+- DELETED przechowuje pełny snapshot przed skasowaniem.
+- Zdarzenie DELETED i usunięcie reklamacji są jednym batchem Firestore.
+- Każde zdarzenie startuje z emailStatus=PENDING.
+- Windows Mail Worker ustawia PROCESSING / SENT / ERROR / SKIPPED.
+
+Po instalacji v15 wdroż FIRESTORE_RULES_REKLAMACJE.rules.

@@ -1,0 +1,12 @@
+SalesAPP Android 1.24 — KONKURSY LIVE
+
+Projekt otwórz w Android Studio albo uruchom plik ZBUDUJ_APK.bat.
+Gotowy plik APK po kompilacji pojawi się w:
+app\build\outputs\apk\debug\app-debug.apk
+
+Nowa zakładka Konkursy obsługuje kilka konkursów i zadań równocześnie,
+ograniczenia uczestników i grup, BIURO, rankingi według różnych wskaźników,
+system punktowy, marżę, cele indywidualne, postęp produktów oraz zdjęcia.
+
+Najpierw podmień moduł Windows SalesAPP, skonfiguruj konkurs, uruchom
+Synchronizuj konkursy, a następnie zainstaluj aplikację Android 1.24.

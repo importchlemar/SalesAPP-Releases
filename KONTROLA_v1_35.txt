@@ -1,0 +1,8 @@
+OK: versionCode 35
+OK: versionName 1.35.0
+OK: login 1.35.0
+OK: new representative classifier
+OK: all non-reps -> BIURO
+OK: PRZED fallback
+OK: WOJTEK/MC fallback
+OK: HANDLOWCY filter uses reps

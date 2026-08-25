@@ -1,0 +1,11 @@
+SalesAPP v19 — Firestore permission fix dla Towar dostarczony
+============================================================
+
+Reguły Firestore dopuszczają teraz przy edycji własnej reklamacji:
+- representativeBroughtGoods
+- warehouseReceived
+- warehouse.received
+- warehouse.receivedAt
+
+Status, decyzja, klient, dokument i produkt nadal nie mogą być zmieniane
+przez aplikację mobilną w tej operacji.

@@ -1,0 +1,10 @@
+SalesAPP v17 — powiadomienia reklamacji tylko właściciela
+========================================================
+
+1. COMPLAINT_UPDATE i COMPLAINT_DELETED są pokazywane tylko użytkownikowi,
+   którego UID znajduje się w recipientUid.
+2. Dla starszych COMPLAINT_UPDATE bez recipientUid aplikacja odczytuje
+   complaints/{id}.reportedBy.uid i sprawdza właściciela.
+3. Stare COMPLAINT_DELETED bez recipientUid są ignorowane, aby nie trafiały wszystkim.
+4. Przy rejestracji/odświeżeniu tokenu FCM usuwany jest ten sam token zapisany
+   wcześniej pod innym UID.

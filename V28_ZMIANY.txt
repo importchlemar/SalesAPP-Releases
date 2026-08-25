@@ -1,0 +1,14 @@
+SalesAPP TEST v1.28
+==================
+
+- Zakładka KONKURS przebudowana pod 3 docelowe rodzaje konkursów.
+- Konkurs ilościowy: duże „ile / ile”, pasek postępu, current/target i dokładnie czego brakuje.
+- Konkurs wartościowy: sprzedaż netto / próg, procent, brakująca kwota; ilości produktów nie są warunkiem.
+- Ranking: miejsce, wartość netto i dystans do wyższego miejsca.
+- ADMIN/BIURO może przełączać przedstawiciela i widzieć wyniki wszystkich.
+- Lista produktów pozostaje osobną zakładką z wyszukiwaniem kod/EAN/nazwa.
+- GitHub updater pobiera APK bezpośrednio i uruchamia systemową instalację.
+- Dodano obsługę jednorazowego zezwolenia „Instaluj nieznane aplikacje”.
+- Repo aktualizacji pozostaje: importchlemar/SalesAPP-TEST-Releases, asset SalesAPP-TEST.apk.
+- applicationId pozostaje com.example.salesapp.test.
+- Reklamacje i pozostałe działające moduły nie zostały przebudowane.

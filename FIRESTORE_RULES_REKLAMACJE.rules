@@ -1,0 +1,177 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profileExists() {
+      return signedIn() && exists(/databases/$(database)/documents/salesapp_users/$(request.auth.uid));
+    }
+
+    function profile() {
+      return get(/databases/$(database)/documents/salesapp_users/$(request.auth.uid)).data;
+    }
+
+    function activeUser() {
+      return profileExists() && profile().active == true;
+    }
+
+    function backoffice() {
+      return activeUser() && profile().role in ['ADMIN', 'BIURO'];
+    }
+
+    function myRepresentative() {
+      return activeUser() ? profile().get('representativeCode', '') : '';
+    }
+
+    function permissions() {
+      return activeUser() ? profile().get('permissions', {}) : {};
+    }
+
+    function can(permission) {
+      return activeUser() && (backoffice() || permissions().get(permission, false) == true);
+    }
+
+    function canDefault(permission, defaultValue) {
+      return activeUser() && (backoffice() || permissions().get(permission, defaultValue) == true);
+    }
+
+    function complaintBelongsToMe(data) {
+      let reported = data.get('reportedBy', {});
+      return reported.get('uid', '') == request.auth.uid
+        || (
+          myRepresentative() != ''
+          && (
+            reported.get('representativeCode', '') == myRepresentative()
+            || reported.get('name', '') == myRepresentative()
+          )
+        );
+    }
+
+    // Profil użytkownika SalesAPP jest tworzony przez administratora/Admin SDK.
+    match /salesapp_users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update, delete: if false;
+
+      match /devices/{deviceId} {
+        allow read, create, update, delete: if activeUser() && request.auth.uid == uid;
+      }
+    }
+
+    match /sales_documents/{document=**} {
+      allow read: if activeUser();
+      allow write: if false;
+    }
+
+    // Lekki indeks wyszukiwania reklamacji.
+    // Zapisy wykonuje synchronizator Windows przez Admin SDK.
+    match /sales_search_customers/{customerId} {
+      allow read: if activeUser();
+      allow write: if false;
+
+      match /products/{productId} {
+        allow read: if activeUser();
+        allow write: if false;
+      }
+    }
+
+    match /complaints/{complaintId} {
+      allow read: if can('complaints.read') && (backoffice() || complaintBelongsToMe(resource.data));
+
+      allow create: if can('complaints.create')
+        && request.resource.data.get('reportedBy', {}).get('uid', '') == request.auth.uid
+        && (
+          backoffice()
+          || (
+            myRepresentative() != ''
+            && request.resource.data.get('reportedBy', {}).get('representativeCode', '') == myRepresentative()
+          )
+        );
+
+      // Android może zmigrować UID starszej reklamacji albo edytować wyłącznie
+      // pola zgłoszone przez przedstawiciela. Status, decyzja, klient, dokument
+      // i produkt pozostają poza edycją aplikacji mobilnej.
+      allow update: if activeUser()
+        && (backoffice() || complaintBelongsToMe(resource.data))
+        && (
+          (
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reportedBy'])
+            && request.resource.data.reportedBy.diff(resource.data.reportedBy).affectedKeys().hasOnly(['uid'])
+            && request.resource.data.reportedBy.get('uid', '') == request.auth.uid
+          )
+          ||
+          (
+            canDefault('complaints.edit', true)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'complaintQuantity',
+              'reason',
+              'description',
+              'representativeKeyInfo',
+              'representativeBroughtGoods',
+              'warehouseReceived',
+              'warehouse',
+              'representativeBroughtAt',
+              'lastEditedAt',
+              'lastEditedBy',
+              'editVersion'
+            ])
+            && (
+              !request.resource.data.diff(resource.data).affectedKeys().hasAny(['warehouse'])
+              ||
+              request.resource.data.get('warehouse', {})
+                .diff(resource.data.get('warehouse', {}))
+                .affectedKeys()
+                .hasOnly(['received', 'receivedAt'])
+            )
+          )
+        );
+
+      allow delete: if activeUser()
+        && (backoffice() || complaintBelongsToMe(resource.data))
+        && canDefault('complaints.delete', true);
+    }
+
+    match /complaints/{complaintId}/history/{historyId} {
+      allow read: if activeUser();
+      allow write: if false;
+    }
+
+    // Numer REK/numer/rok przydzielany w transakcji z SalesAPP.
+    match /system_counters/{counterId} {
+      allow read, create, update: if activeUser();
+      allow delete: if false;
+    }
+
+    // Zgodność z obecnym modułem Windows: jeden aktualny rekord urządzenia na UID.
+    match /salesapp_devices/{deviceId} {
+      allow create, update: if activeUser() && deviceId == request.auth.uid;
+      allow read, delete: if false;
+    }
+
+
+
+    // Niezmienny dziennik zdarzeń z aplikacji mobilnej.
+    // Windows/Admin SDK aktualizuje wyłącznie status wysyłki maila.
+    match /complaint_events/{eventId} {
+      allow create: if activeUser()
+        && request.resource.data.get('eventType', '') in ['CREATED', 'UPDATED', 'DELETED']
+        && request.resource.data.get('complaintId', '') is string
+        && request.resource.data.get('actor', {}).get('uid', '') == request.auth.uid
+        && request.resource.data.get('source', '') == 'SALESAPP'
+        && request.resource.data.get('emailRequested', false) == true
+        && request.resource.data.get('emailStatus', '') == 'PENDING';
+
+      allow read: if activeUser()
+        && (backoffice() || resource.data.get('actor', {}).get('uid', '') == request.auth.uid);
+
+      allow update, delete: if false;
+    }
+
+    match /complaint_notifications/{notificationId} {
+      allow read: if activeUser();
+      allow write: if false;
+    }
+  }
+}

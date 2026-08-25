@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "584911343019",
+    "project_id": "salesapp-a68fa",
+    "storage_bucket": "salesapp-a68fa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584911343019:android:7f65065d2eb858f0f196ee",
+        "android_client_info": {
+          "package_name": "com.example.salesapp.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTsr3uizxQv4fi6w47ZjlFkS5u9N1XbAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,10 @@
+OK: versionCode 34
+OK: versionName 1.34.0
+OK: auth guard helper
+OK: listener guarded
+OK: listener stopped on logout
+OK: listener stopped onDestroy
+OK: repository FirebaseAuth guard
+OK: Firebase LIVE settings wording
+OK: no old settings wording
+OK: login version 1.34

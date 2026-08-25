@@ -1,0 +1,13 @@
+SalesAPP v21 — produkt -> dokument
+=================================
+
+Naprawiono przypadek: produkt jest znaleziony, ale etap 3 nie pokazuje dokumentu.
+
+Zmiany:
+- ID kontrahenta: optima_id / customer_id / id / optima_<id>,
+- ID produktu: product_id / optima_id / id / optima_<id>,
+- nowy indeks customer_product_keys,
+- fallback dokumentów zwiększony 120 -> 500,
+- brak cichego 'return' — aplikacja pokazuje przyczynę.
+
+Po wdrożeniu Reklamacji Windows v5.24.10 uruchom raz synchronizację 24 M-CE.

@@ -1,0 +1,8 @@
+OK: 1.34.0 / code 33
+OK: GitHub produkcja
+OK: salesapp_devices MainActivity
+OK: salesapp_devices FCM
+OK: devices subcollection
+OK: systemowe powiadomienie update
+OK: tap update intent
+OK: stały podpis release

@@ -1,0 +1,89 @@
+SALESAPP v13 — FIREBASE LOGIN + REKLAMACJE + FCM
+=================================================
+
+CO JEST GOTOWE
+- pełny projekt Android Studio na bazie SalesAPP v12,
+- Firebase Authentication: e-mail + hasło,
+- brak PIN i brak signInAnonymously(),
+- konto powiązane z UID Firebase,
+- profil użytkownika w salesapp_users/{UID},
+- rola: ADMIN / BIURO / HANDLOWIEC,
+- HANDLOWIEC ma representativeCode np. PRZED1,
+- uprawnienia i widoczność zakładek z profilu Firebase,
+- FCM powiązany z UID + PRZED + urządzeniem,
+- reklamacje powiązane z UID i PRZED,
+- poprawione wyszukiwanie kontrahentów (bez polskich znaków, wiele słów),
+- zachowany istniejący Apps Script / dashboard / moduł reklamacji.
+
+1. FIREBASE AUTHENTICATION
+Firebase Console -> Authentication -> Sign-in method -> Email/Password -> Enable.
+
+Następnie Authentication -> Users -> Add user.
+Utwórz użytkownikowi e-mail i hasło.
+Skopiuj jego UID.
+
+2. PROFIL UŻYTKOWNIKA
+Firestore -> kolekcja: salesapp_users
+ID dokumentu = UID użytkownika z Firebase Authentication.
+
+Przykład HANDLOWIEC:
+email: handlowiec@chle-mar.pl
+name: Jan Kowalski
+role: HANDLOWIEC
+representativeCode: PRZED1
+clientScope: SWOI
+active: true
+permissions: mapa
+  complaints.read = true
+  complaints.create = true
+  tabs.summary = true
+  tabs.owners = true
+  tabs.contest = true
+  tabs.market = true
+  tabs.clients = true
+  tabs.complaints = true
+
+Przykład BIURO:
+role: BIURO
+representativeCode: pusty
+clientScope: WSZYSCY
+active: true
+permissions:
+  complaints.read = true
+  complaints.create = true
+  tabs.market = true
+  tabs.complaints = true
+
+Przykład ADMIN:
+role: ADMIN
+representativeCode: pusty
+clientScope: WSZYSCY
+active: true
+ADMIN ma pełne uprawnienia w aplikacji.
+
+3. FIRESTORE RULES
+W Firebase Console -> Firestore Database -> Rules
+wklej zawartość pliku:
+FIRESTORE_RULES_REKLAMACJE.rules
+
+4. STORAGE RULES
+W Firebase Console -> Storage -> Rules
+wklej zawartość pliku:
+STORAGE_RULES_REKLAMACJE.rules
+
+5. ANDROID STUDIO
+Otwórz folder:
+SalesAPP_v13_FIREBASE_LOGIN_REKLAMACJE
+
+Poczekaj na Gradle Sync.
+Następnie Build -> Build APK(s)
+albo uruchom ZBUDUJ_APK.bat.
+
+APK po buildzie:
+app\build\outputs\apk\debug\app-debug.apk
+
+UWAGA O BUILDZIE W CHATGPT
+Kod został przygotowany jako pełny projekt. Tutaj build nie mógł zostać dokończony,
+ponieważ Gradle Wrapper próbował pobrać gradle-9.4.1-bin.zip z services.gradle.org,
+a środowisko wykonawcze nie ma dostępu do tego hosta. To nie jest błąd kodu aplikacji.
+Android Studio z dostępem do internetu pobierze wymagany Gradle automatycznie.

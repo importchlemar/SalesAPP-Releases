@@ -1,0 +1,12 @@
+SalesAPP v1.30
+==============
+- widoczna nazwa aplikacji: SalesAPP (bez słowa TEST),
+- pozostaje osobnym buildem testowym applicationId=com.example.salesapp.test,
+- Konkurs: ilość / wartość netto z progami / ranking,
+- dla progów wartości pokazuje aktualną premię i kwotę do kolejnego progu,
+- TEST aktualizuje się z importchlemar/SalesAPP-TEST-Releases, asset SalesAPP-TEST.apk,
+- folder PRODUKCJA_SalesAPP-Releases zawiera konfigurację głównego SalesAPP:
+  importchlemar/SalesAPP-Releases, asset SalesAPP.apk.
+
+Głównego APK nie budujemy z testowym google-services.json ani testowym applicationId.
+Do produkcji potrzebny jest aktualny projekt głównego SalesAPP z jego identyfikatorem Firebase i tym samym podpisem co obecne instalacje.

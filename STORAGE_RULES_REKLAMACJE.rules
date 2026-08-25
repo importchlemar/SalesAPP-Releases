@@ -1,0 +1,57 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profilePath() {
+      return /databases/(default)/documents/salesapp_users/$(request.auth.uid);
+    }
+
+    function profile() {
+      return firestore.get(profilePath()).data;
+    }
+
+    function activeUser() {
+      return signedIn()
+        && firestore.exists(profilePath())
+        && profile().active == true;
+    }
+
+    function complaintPath(complaintId) {
+      return /databases/(default)/documents/complaints/$(complaintId);
+    }
+
+    function complaint(complaintId) {
+      return firestore.get(complaintPath(complaintId)).data;
+    }
+
+    function isBackoffice() {
+      return activeUser() && profile().role in ['ADMIN', 'BIURO'];
+    }
+
+    function isOwner(complaintId) {
+      return activeUser()
+        && (
+          complaint(complaintId).reportedBy.get('uid', '') == request.auth.uid
+          || (
+            profile().get('representativeCode', '') != ''
+            && (
+              complaint(complaintId).reportedBy.get('representativeCode', '')
+                == profile().get('representativeCode', '')
+              || complaint(complaintId).reportedBy.get('name', '')
+                == profile().get('representativeCode', '')
+            )
+          )
+        );
+    }
+
+    match /complaints_signed/{complaintId}/{fileName} {
+      allow read: if isBackoffice() || isOwner(complaintId);
+      allow delete: if isBackoffice() || isOwner(complaintId);
+      allow create, update: if false;
+    }
+  }
+}

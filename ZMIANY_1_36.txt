@@ -1,0 +1,7 @@
+SalesAPP 1.36.0
+- produkty konkursu: PRODUKTY IMPORT / KONKURSY_PRODUKTY
+- nazwa + EAN + minimum z Google Sheets
+- przycisk sprawdzenia aktualnej wersji
+- Odśwież dane działa w tle bez ekranu wiszącego ładowania
+- usunięte legacy globalne topiki FCM
+- reklamacje filtrowane UID / representativeCode / przypisanie

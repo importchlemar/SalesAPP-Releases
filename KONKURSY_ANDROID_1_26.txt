@@ -1,0 +1,25 @@
+SalesAPP Android 1.26 — KONKURSY, OPTIMA I ARKUSZ GOOGLE
+
+Projekt otwórz w Android Studio albo uruchom plik ZBUDUJ_APK.bat.
+Gotowy plik APK po kompilacji pojawi się w:
+app\build\outputs\apk\debug\app-debug.apk
+
+Zakładka Konkursy obsługuje kilka konkursów i zadań równocześnie,
+ograniczenia uczestników i grup, BIURO, rankingi według różnych wskaźników,
+warunki konkursowe, marżę, cele indywidualne, postęp produktów oraz zdjęcia.
+
+Jeden konkurs może zawierać do 50 000 produktów aktualizowanych bezpośrednio
+z atrybutów Optimy. Produkty NIE są zapisywane w Firebase. Windows tworzy Excel
+ze zdjęciami, folder miniaturek i opcjonalnie aktualizuje wybrany Arkusz Google.
+
+Android pobiera produkty bezpośrednio z Arkusza Google, jednym połączeniem
+dla danej wersji listy. Aby było to możliwe, udostępnij arkusz ustawieniem:
+„Każda osoba mająca link — Wyświetlający”. Lista będzie dostępna osobom,
+które znają link. Jeżeli nie chcesz udostępniać arkusza, rankingi i wyniki
+nadal działają, a pełną listę produktów obejrzysz w lokalnym Excelu.
+
+Konkurs obejmujący wszystkie produkty nie tworzy kartoteki, Excela ani miniaturek.
+
+Najpierw podmień moduł Windows SalesAPP, skonfiguruj konkurs, uruchom
+Synchronizuj konkursy, a następnie zainstaluj aplikację Android 1.26.
+Nie trzeba dodawać żadnych nowych kolekcji ani reguł produktów w Firebase.

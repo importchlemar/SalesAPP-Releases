@@ -1,0 +1,11 @@
+SalesAPP v18 — synchronizacja Towar dostarczony
+==============================================
+
+Każda zmiana checkboxa zapisuje jednocześnie:
+- representativeBroughtGoods
+- warehouseReceived
+- warehouse.received
+- warehouse.receivedAt / representativeBroughtAt
+
+Odczyt checkboxa korzysta z warehouse.received, a dla starych rekordów
+z representativeBroughtGoods / warehouseReceived.

@@ -1,0 +1,12 @@
+SalesAPP v14 — zmiany reklamacji
+
+1. Przycisk „Podgląd dokumentu” jest mały i znajduje się na samym dole karty reklamacji.
+2. Dodano przycisk „Edytuj” reklamacji.
+3. Dodano przycisk „Usuń” z potwierdzeniem.
+4. Edycja pozwala zmienić: ilość, powód, opis, kluczowe informacje i informację o dostarczeniu towaru.
+5. Status, decyzja, klient, dokument i produkt nie są zmieniane przez edycję mobilną.
+6. Przy usuwaniu aplikacja próbuje najpierw usunąć podpisany plik ze Storage, a potem rekord reklamacji.
+7. Zaktualizowano FIRESTORE_RULES_REKLAMACJE.rules i STORAGE_RULES_REKLAMACJE.rules.
+8. Zaktualizowano wersję aplikacji do 1.14 (versionCode 14).
+
+WAŻNE: aby edycja/usuwanie działały, trzeba wdrożyć nowe reguły Firestore i Storage.

@@ -1,0 +1,17 @@
+SalesAPP v1.31 — kontrola Reklamacji ze starego Androida
+=========================================================
+complaintsFirestore: OK
+complaintReasons: OK
+renderComplaintsScreen: OK
+loadMyComplaints: OK
+showComplaintForm: OK
+saveComplaint: OK
+complaintRealtimeListener: OK
+pendingOpenComplaints: OK
+registerComplaintDeviceToken: OK
+applyComplaintNotificationIntent: OK
+sales_documents: OK
+complaints: OK
+
+Windows Reklamacje pozostają osobnym modułem.
+Globalne ustawienia Android są teraz z salesapp_settings/global.
