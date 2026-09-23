@@ -13,36 +13,56 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare Drive auth
+      - name: Prepare Google tokens
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           set -euo pipefail
           python3 -m pip install --quiet google-auth requests
-          python3 - <<'PY' > /tmp/drive_token
+          python3 - <<'PY'
           import json, os
           from google.oauth2 import service_account
           from google.auth.transport.requests import Request
           info = json.loads(os.environ["FIREBASE_SERVICE_ACCOUNT"])
-          creds = service_account.Credentials.from_service_account_info(
+
+          cloud = service_account.Credentials.from_service_account_info(
+              info,
+              scopes=["https://www.googleapis.com/auth/cloud-platform"],
+          )
+          cloud.refresh(Request())
+          open("/tmp/cloud_token","w").write(cloud.token)
+
+          drive = service_account.Credentials.from_service_account_info(
               info,
               scopes=["https://www.googleapis.com/auth/drive.readonly"],
           )
-          creds.refresh(Request())
-          print(creds.token)
+          drive.refresh(Request())
+          open("/tmp/drive_token","w").write(drive.token)
           PY
+
+      - name: Enable Drive API if needed
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          CLOUD_TOKEN="$(cat /tmp/cloud_token)"
+          curl -sS -X POST             -H "Authorization: Bearer ${CLOUD_TOKEN}"             -H "Content-Type: application/json"             "https://serviceusage.googleapis.com/v1/projects/584911343019/services/drive.googleapis.com:enable"             -d '{}' > /tmp/enable_drive.json
+          cat /tmp/enable_drive.json
+          sleep 10
 
       - name: Download signed APK from Drive
         run: |
           set -euo pipefail
           ACCESS_TOKEN="$(cat /tmp/drive_token)"
-          HTTP_CODE="$(curl -sS -L             -H "Authorization: Bearer ${ACCESS_TOKEN}"             -w "%{http_code}"             "https://www.googleapis.com/drive/v3/files/1EH9-e3KPN8gXJISUL4V8Q5rxj6b1BgOS?alt=media"             -o /tmp/drive_response)"
-          echo "Drive HTTP: $HTTP_CODE"
-          if [ "$HTTP_CODE" != "200" ]; then
+          for n in 1 2 3 4 5 6; do
+            HTTP_CODE="$(curl -sS -L               -H "Authorization: Bearer ${ACCESS_TOKEN}"               -w "%{http_code}"               "https://www.googleapis.com/drive/v3/files/1EH9-e3KPN8gXJISUL4V8Q5rxj6b1BgOS?alt=media"               -o /tmp/drive_response)"
+            echo "Drive HTTP: $HTTP_CODE"
+            if [ "$HTTP_CODE" = "200" ]; then
+              mv /tmp/drive_response SalesAPP.apk
+              break
+            fi
             cat /tmp/drive_response
-            exit 1
-          fi
-          mv /tmp/drive_response SalesAPP.apk
+            sleep 10
+          done
           test -s SalesAPP.apk
           sha256sum SalesAPP.apk
 
