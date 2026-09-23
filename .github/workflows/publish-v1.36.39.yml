@@ -13,26 +13,36 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Authenticate for Drive download
-        id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          token_format: access_token
-          access_token_scopes: https://www.googleapis.com/auth/drive.readonly
-
-      - name: Download signed APK from Drive
+      - name: Prepare Drive auth
         env:
-          ACCESS_TOKEN: '${{ steps.auth.outputs.access_token }}'
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           set -euo pipefail
+          python3 -m pip install --quiet google-auth requests
+          python3 - <<'PY' > /tmp/drive_token
+          import json, os
+          from google.oauth2 import service_account
+          from google.auth.transport.requests import Request
+          info = json.loads(os.environ["FIREBASE_SERVICE_ACCOUNT"])
+          creds = service_account.Credentials.from_service_account_info(
+              info,
+              scopes=["https://www.googleapis.com/auth/drive.readonly"],
+          )
+          creds.refresh(Request())
+          print(creds.token)
+          PY
+
+      - name: Download signed APK from Drive
+        run: |
+          set -euo pipefail
+          ACCESS_TOKEN="$(cat /tmp/drive_token)"
           curl --fail-with-body -L             -H "Authorization: Bearer ${ACCESS_TOKEN}"             "https://www.googleapis.com/drive/v3/files/1EH9-e3KPN8gXJISUL4V8Q5rxj6b1BgOS?alt=media"             -o SalesAPP.apk
           test -s SalesAPP.apk
           sha256sum SalesAPP.apk
 
       - name: Publish GitHub release
         env:
-          GH_TOKEN: '${{ github.token }}'
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if gh release view v1.36.39 >/dev/null 2>&1; then
