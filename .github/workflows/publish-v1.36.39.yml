@@ -36,7 +36,13 @@ jobs:
         run: |
           set -euo pipefail
           ACCESS_TOKEN="$(cat /tmp/drive_token)"
-          curl --fail-with-body -L             -H "Authorization: Bearer ${ACCESS_TOKEN}"             "https://www.googleapis.com/drive/v3/files/1EH9-e3KPN8gXJISUL4V8Q5rxj6b1BgOS?alt=media"             -o SalesAPP.apk
+          HTTP_CODE="$(curl -sS -L             -H "Authorization: Bearer ${ACCESS_TOKEN}"             -w "%{http_code}"             "https://www.googleapis.com/drive/v3/files/1EH9-e3KPN8gXJISUL4V8Q5rxj6b1BgOS?alt=media"             -o /tmp/drive_response)"
+          echo "Drive HTTP: $HTTP_CODE"
+          if [ "$HTTP_CODE" != "200" ]; then
+            cat /tmp/drive_response
+            exit 1
+          fi
+          mv /tmp/drive_response SalesAPP.apk
           test -s SalesAPP.apk
           sha256sum SalesAPP.apk
 
