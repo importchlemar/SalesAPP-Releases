@@ -1,0 +1,48 @@
+name: Send SalesAPP 1.36.39 notification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/send-v1.36.39-notification.yml'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+
+      - name: Send FCM update notification
+        shell: bash
+        env:
+          PROJECT_ID: salesapp-a68fa
+        run: |
+          set -euo pipefail
+
+          TOKEN="$(gcloud auth print-access-token)"
+
+          python3 - <<'PY' > /tmp/fcm.json
+          import json
+          body = {
+              "message": {
+                  "topic": "salesapp_app_updates",
+                  "data": {
+                      "type": "APP_UPDATE",
+                      "version": "1.36.39",
+                      "url": "https://github.com/importchlemar/SalesAPP-Releases/releases/download/v1.36.39/SalesAPP.apk",
+                      "notes": "Dostawy z Optimy przez Google Sheets/Apps Script. Uproszczone podsumowanie, status Oczekuje na przyjęcie, numer i data PZ oraz przejście do wszystkich produktów z wybranego PZ.",
+                      "title": "Dostępna nowa wersja SalesAPP",
+                      "body": "Wersja 1.36.39 — dotknij, aby zaktualizować."
+                  },
+                  "android": {
+                      "priority": "high"
+                  }
+              }
+          }
+          print(json.dumps(body, ensure_ascii=False))
+          PY
+
+          curl --fail-with-body -sS -X POST             -H "Authorization: Bearer ${TOKEN}"             -H "Content-Type: application/json; UTF-8"             "https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send"             --data-binary @/tmp/fcm.json
